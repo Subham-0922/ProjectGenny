@@ -12,6 +12,7 @@ def createProject(email, project):
     if current_active_user is None:
         return jsonify({'message': 'you are not Authorize to Create Project'}), 403
     projects.insert_one(project)
+    project['_id']=str(project['_id'])
     return jsonify(project), 201
     # adminEmail, managerEmail, projectid
 
@@ -54,13 +55,18 @@ def displayProjects(email):
     if my_user.get("role") == 'ADMIN':
         return jsonify(list(projects.find())), 200
     else:
-        return jsonify(list(projects.find({'manager': email})))
+        arr=list(projects.find({'manager': email}))
+        for pr in arr:
+            pr['_id']=str(pr['_id'])
+
+        return jsonify(arr)
 
 def display_single_project(email, projectid):
     project = projects.find_one({'projectId': projectid})
     if project is None:
         return jsonify({'message': 'Project not found'}), 301
     current_active_user = activeUser.find_one({'email': email, 'role': 'ADMIN'})
+    project['_id'] = str(project['_id'])
     if current_active_user is None:
         current_active_user2 = activeUser.find_one({'email': email})
         if current_active_user2 is None:

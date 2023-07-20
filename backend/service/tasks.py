@@ -21,6 +21,7 @@ def createTask(email, projectid, task):
     task['status'] = 'to do'
     task['createDate'] = str(date.today())
     tasks.insert_one(task)
+    return jsonify(task),200
 
 
 def deleteTask(email, projectid, taskName):
@@ -55,12 +56,16 @@ def showTasks(email, projectid):
         return jsonify({'message': "Project Not Found"}), 301
     if project['manager'] != email:
         return jsonify({'message': 'You are not Authorized'}), 403
-
-    return jsonify(list(tasks.find({'projectId': projectid}))), 200
-def show_single_task(email,projectid,taskid):
+    arr=list(tasks.find({'projectId': projectid}))
+    for tk in arr:
+        tk['_id']=str(tk['_id'])
+    return jsonify(arr), 200
+def show_single_task(email, projectid, taskid):
     project = projects.find_one({"projectId": projectid})
     if project is None:
         return jsonify({'message': "Project Not Found"}), 301
     if project['manager'] != email:
         return jsonify({'message': 'You are not Authorized'}), 403
-    return jsonify(list(tasks.find_one({'projectId': projectid,'name':taskid}))), 200
+    tk=tasks.find_one({'projectId': projectid, 'name': taskid})
+    tk['_id'] = str(tk['_id'])
+    return jsonify(tk), 200
