@@ -1,4 +1,4 @@
-from models.database import user, activeUser, resource, tasks, projects,count
+from models.database import activeUser, resource, tasks, projects,count
 from flask import jsonify
 from datetime import date
 
@@ -40,7 +40,10 @@ def showResources(email):
     active = activeUser.find_one({'email': email})
     if active is None:
         return jsonify({'message': 'Please Log In First'}), 403
-    return jsonify(list(resource.find())),200
+    arr=list(resource.find())
+    for r in arr:
+        r['_id']=str(r['_id'])
+    return jsonify(arr),200
 def asignResourceToTask(email,task,resId):
     e_res = resource.find({'rid': resId})
     if e_res is None:
@@ -60,4 +63,6 @@ def show_single_resource(email,rid):
     active = activeUser.find_one({'email': email})
     if active is None:
         return jsonify({'message': 'Please Log In First'}), 403
-    return jsonify(resource.find_one({'rid':rid}))
+    res=resource.find_one({'rid':rid})
+    res['_id']=str(res['_id'])
+    return jsonify(res)
