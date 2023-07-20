@@ -15,17 +15,17 @@ def doLogOut(email):return logout(email)
 @app.route('/user/delete/<email>')
 def delete_user_route(email):return deleteUser(email)
 @app.route('/user/update/<email>')
-def update_user_route(email):return updateUser(email,request)
+def update_user_route(email):return updateUser(email,request.get_json())
 
 @app.route('/user/managers/<email>')
 def show_managers(email):return readManager(email)
 @app.route('/project/<email>',methods=['POST'])
-def addProject(email):return createProject(email,request)
+def addProject(email):return createProject(email,request.get_json())
 
 @app.route('/project/<email>',methods=['PUT'])
-def assignProject(email):return asignProjectToManager(email,request)
+def assignProject(email):return asignProjectToManager(email,request.get_json())
 @app.route('/project/<email>',methods=['PATCH'])
-def updateProject(email):return updateProject(email,request)
+def updateProject(email):return updateProject(email,request.get_json())
 
 @app.route('/project/<email>',methods=['GET'])
 def allProjects(email):return displayProjects(email);
@@ -37,12 +37,12 @@ def getProject(email,projectid):return display_single_project(email, projectid);
 def deleteProject(email,projectid):return deleteProject(email,projectid)
 
 @app.route('/res/<email>',methods=['POST'])
-def createResource(email):return addResource(email,request)
+def createResource(email):return addResource(email,request.get_json())
 @app.route('/res/<email>/<resid>',methods=['DELETE'])
 def removeResource(email,resid):return deleteResouce(email,resid)
 
 @app.route('/res/<email>/<resid>',methods=['PATCH'])
-def updateResource(email,resid):return updateResource(email,resid,request)
+def updateResource(email,resid):return updateResource(email,resid,request.get_json())
 @app.route('/res/<email>',methods=['GET'])
 def getAllResources(email):return showResources(email)
 @app.route('/res/<email>/<task>/<resId>',methods=['PATCH'])

@@ -4,7 +4,7 @@ from datetime import date
 
 
 def createProject(email, project):
-    existing_project = projects.find_one({"projectId": project.get('projectId')})
+    existing_project = projects.find_one({"projectId": project['projectId']})
     if existing_project is not None:
         return jsonify({"message": "Project with same Id already Present"}), 301
     project["startDate"] = str(date.today())
