@@ -21,6 +21,7 @@ def createTask(email, projectid, task):
     task['status'] = 'to do'
     task['createDate'] = str(date.today())
     tasks.insert_one(task)
+
     return jsonify(task),200
 
 

@@ -93,4 +93,6 @@ def readManager(email):
     if activeUseri is None:
         return jsonify({'message': "You have to Log In First"}), 403
     managers = list(user.find({'role': 'Manager'}))
+    for manager in managers:
+        manager['_id']=str(manager['_id'])
     return jsonify(managers), 201

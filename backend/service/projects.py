@@ -59,7 +59,7 @@ def displayProjects(email):
         for pr in arr:
             pr['_id']=str(pr['_id'])
 
-        return jsonify(arr)
+        return jsonify(arr),200
 
 def display_single_project(email, projectid):
     project = projects.find_one({'projectId': projectid})
