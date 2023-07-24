@@ -11,6 +11,9 @@ def createProject(email, project):
     current_active_user = activeUser.find_one({'email': email, 'role': 'ADMIN'})
     if current_active_user is None:
         return jsonify({'message': 'you are not Authorize to Create Project'}), 403
+    #changes
+    project["status"]='to do'
+    #changes
     projects.insert_one(project)
     project['_id']=str(project['_id'])
     return jsonify(project), 201
@@ -31,13 +34,18 @@ def asignProjectToManager(adminEmail, request):
     projects.update_one({"projectId": projectid}, {'$set': {'manager': managerEmail}})
     return jsonify({'message': "Project is Assigned SuccessFully"}), 200
 
-def updateProject(adminEmail, request):
-    project = request.get('project')
+def update_Project(adminEmail, request):
+    print(request)
+    project = request
     current_active_user = activeUser.find_one({'email': adminEmail, 'role': 'ADMIN'})
     if current_active_user is None:
         return jsonify({'message': 'you are not Authorize to assign Project'}), 403
-
-    projects.update_one({"projectId": project['projectId']}, {'$set': project})
+    oldname=project.pop('old_projectId')
+    if oldname!=project['projectId']:
+        existing_project = projects.find_one({"projectId": project['projectId']})
+        if existing_project is not None:
+            return jsonify({"message": "Project with same Id already Present"}), 301
+    projects.update_one({"projectId": oldname}, {'$set': project})
     return jsonify({'message': "Project is Updated SuccessFully"}), 200
 
 def deleteProject(email, projectid):
@@ -52,14 +60,17 @@ def deleteProject(email, projectid):
 
 def displayProjects(email):
     my_user = activeUser.find_one({'email': email})
-    if my_user.get("role") == 'ADMIN':
-        return jsonify(list(projects.find())), 200
+    if my_user["role"] == 'ADMIN':
+        arr=list(projects.find())
+        for pr in arr:
+            pr['_id']=str(pr['_id'])
+        return arr
     else:
         arr=list(projects.find({'manager': email}))
         for pr in arr:
             pr['_id']=str(pr['_id'])
 
-        return jsonify(arr),200
+    return jsonify(arr),200
 
 def display_single_project(email, projectid):
     project = projects.find_one({'projectId': projectid})

@@ -12,11 +12,11 @@ def addResource(email, res):
     if active is None:
         return jsonify({'message': 'You are Not allowed'}), 403
     else:
-        cc=count.find_one({'name':'cc'})['cc']
-        resource['rid'] = cc
-        count.update_one({'name':'cc'},{'$set':{'cc':cc+1}})
+        cc = count.find_one({'name': 'cc'})['cc']
+        res['rid'] = str(cc)  # Use cc directly as an integer value
+        count.update_one({'name': 'cc'}, {'$set': {'cc': cc + 1}})
         resource.insert_one(res)
-    return jsonify(res), 200
+    return jsonify({'message':"Added Successfully"}), 200
 
 
 def deleteResource(email, resid):

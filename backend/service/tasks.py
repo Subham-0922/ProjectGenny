@@ -10,6 +10,10 @@ from datetime import date
 # }
 def createTask(email, projectid, task):
     project = projects.find_one({"projectId": projectid})
+    # changes
+    project["status"]='In Progress'
+    projects.update_one({"projectId": projectid},project)
+    # changes
     if project is None:
         return jsonify({'message': "Project Not Found"}), 301
     if project['manager'] != email:
