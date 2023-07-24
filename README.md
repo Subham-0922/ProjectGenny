@@ -59,7 +59,7 @@ Please note that these credentials are provided for testing purposes only.
 
 ## ER Diagram
 
-[Include the Entity Relationship (ER) Diagram showcasing the relationship between entities.]
+[https://drawsql.app/teams/prince-wolf/diagrams/portfoliomanager/embed]
 
 ## Documentation
 
