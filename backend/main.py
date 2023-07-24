@@ -1,7 +1,8 @@
 from flask import Flask, request
+from flask_cors import CORS
 
-from service.authLog import signUp, logIn, logout, deleteUser, updateUser, readManager
-from service.projects import createProject, asignProjectToManager, updateProject, deleteProject, displayProjects, \
+from service.authLog import signUp, logIn, logout, deleteUser, updateUser, readManager, isAdmin
+from service.projects import createProject, asignProjectToManager, update_Project, deleteProject, displayProjects, \
     display_single_project
 from service.resource import addResource, deleteResource, updateResource, showResources, asignResourceToTask, \
     show_single_resource
@@ -9,24 +10,28 @@ from service.tasks import createTask, deleteTask, updateTask, showTasks, show_si
 
 app = Flask(__name__)
 
+cors=CORS(app)
 
-@app.route('/user/signup')
+@app.route('/user/signup',methods=['POST'])
 def dosignUp(): return signUp(request.get_json())
 
 
-@app.route('/user/login')
+@app.route('/user/login',methods=['POST'])
 def doLogIn(): return logIn(request.get_json())
 
 
-@app.route('/user/logout/<email>')
+@app.route('/user/logout/<email>',methods=['GET'])
 def doLogOut(email): return logout(email)
 
 
-@app.route('/user/delete/<email>')
+@app.route('/user/delete/<email>',methods=['DELETE'])
 def delete_user_route(email): return deleteUser(email)
 
+@app.route('/user/isadmin/<email>')
+def is_admin(email): return isAdmin(email)
 
-@app.route('/user/update/<email>')
+
+@app.route('/user/update/<email>',methods=['PUT'])
 def update_user_route(email): return updateUser(email, request.get_json())
 
 
@@ -43,7 +48,7 @@ def assignProject(email): return asignProjectToManager(email, request.get_json()
 
 
 @app.route('/project/<email>', methods=['PATCH'])
-def updateProject(email): return updateProject(email, request.get_json())
+def updateProject(email): return update_Project(email, request.get_json())
 
 
 @app.route('/project/<email>', methods=['GET'])
@@ -55,7 +60,7 @@ def getProject(email, projectid): return display_single_project(email, projectid
 
 
 @app.route('/project/<email>/<projectid>', methods=['DELETE'])
-def deleteProject(email, projectid): return deleteProject(email, projectid)
+def delete_Project(email, projectid): return deleteProject(email, projectid)
 
 
 @app.route('/res/<email>', methods=['POST'])
@@ -67,7 +72,7 @@ def removeResource(email, resid): return deleteResource(email, resid)
 
 
 @app.route('/res/<email>/<resid>', methods=['PATCH'])
-def updateResource(email, resid): return updateResource(email, resid, request.get_json())
+def update_Resource(email, resid): return updateResource(email, resid, request.get_json())
 
 
 @app.route('/res/<email>', methods=['GET'])
@@ -90,16 +95,16 @@ def create_task(email, projectid, task): return createTask(email, projectid, tas
 def delete_task(email, projectid, task): return deleteTask(email, projectid, task)
 
 
-@app.route('/task/<email>/<projectid>/<task>', methods=['PATCH'])
-def delete_task(email, projectid, task): return updateTask(email, projectid, task)
-
-
 @app.route('/task/<email>/<projectid>', methods=['GET'])
 def show_all_tasks(email, projectid): return showTasks(email, projectid)
 
 
 @app.route('/task/<email>/<projectid>/<taskid>')
 def show_one_task(email, projectid, taskid): return show_single_task(email, projectid, taskid)
+
+
+@app.route('/task/<email>/<projectId>',methods=['PUT'])
+def update_task(email,projectId,task):return updateTask(email,projectId,task)
 
 
 if __name__ == '__main__':

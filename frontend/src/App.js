@@ -1,12 +1,18 @@
+import MainRoutes from './components/MainRoutes';
+import { ToastContainer } from 'react-toastify';
 import Home from './components/Home';
-import SignupForm from './components/SignupForm';
+import 'react-toastify/dist/ReactToastify.css';
+import { base }  from './Utils/post';
+
+
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Home/>
-      <SignupForm/>
+      <Home />
+      <MainRoutes/>
+      <ToastContainer />
     </div>
   );
 }
